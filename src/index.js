@@ -1,3 +1,4 @@
+//"StAuth10222: I John Doe, 123456 certify that this material is my original work. No other person's work has been used without due acknowledgement. I have not made my work available to anyone else."
 const axios = require('axios');
 require('dotenv').config();
 const {Client, IntentsBitField, ClientApplication} = require('discord.js');
@@ -35,11 +36,11 @@ client.on('messageCreate', (message) => {
 });
 
 client.on('interactionCreate', (interaction) => {
-    let firstPokemonWeight;
-    let secondPokemonWeight;
+
     if (!interaction.isChatInputCommand()) return;
     if(interaction.commandName === 'pokemonweightcompare') {
-
+        let firstPokemonWeight;
+        let secondPokemonWeight;
         const firstPokemon = interaction.options.get('first-pokemon').value;
         const secondPokemon = interaction.options.get('second-pokemon').value;
         let endpoints = [`https://pokeapi.co/api/v2/pokemon/${firstPokemon.toLowerCase()}`, `https://pokeapi.co/api/v2/pokemon/${secondPokemon.toLowerCase()}`]
@@ -118,6 +119,32 @@ client.on('interactionCreate', (interaction) => {
         })
         .catch(error => {
             interaction.reply(`The Check if Pokemon is in Region didn't work.`)
+            console.log(error)
+        })
+    }
+    if(interaction.commandName === 'whosebasestatstotalishigher') {
+        let firstPokemonBaseStats = 0;
+        let secondPokemonBaseStats = 0;
+        const firstPokemon = interaction.options.get('first-pokemon').value;
+        const secondPokemon = interaction.options.get('second-pokemon').value;
+        let endpoints = [`https://pokeapi.co/api/v2/pokemon/${firstPokemon.toLowerCase()}`, `https://pokeapi.co/api/v2/pokemon/${secondPokemon.toLowerCase()}`]
+        axios.all(endpoints.map((endpoint) => axios.get(endpoint)))
+        .then(response => {
+            for(object of response[0].data.stats) {
+                firstPokemonBaseStats += object.base_stat
+            }
+            for(object of response[1].data.stats) {
+                secondPokemonBaseStats += object.base_stat
+            }
+                if(firstPokemonBaseStats > secondPokemonBaseStats) {
+                    interaction.reply(`${firstPokemon}'s total base stats (${firstPokemonBaseStats}) is greater than ${secondPokemon}'s total basestats (${secondPokemonBaseStats})`)
+
+                } else {
+                    interaction.reply(`${secondPokemon}'s weight (${secondPokemonBaseStats}) is greater than ${firstPokemon}'s weight (${firstPokemonBaseStats})`)
+                }
+            })
+        .catch(error => {
+            interaction.reply(`The Pokemon Total Base Stats Compare didn't work, it's most likely because you spelled one or more of the Pokemon(s) name wrong`)
             console.log(error)
         })
     }

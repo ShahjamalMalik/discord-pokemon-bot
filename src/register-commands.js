@@ -1,3 +1,4 @@
+//"StAuth10222: I John Doe, 123456 certify that this material is my original work. No other person's work has been used without due acknowledgement. I have not made my work available to anyone else."
 require('dotenv').config();
 const {REST, Routes, ApplicationCommandOptionType} = require('discord.js');
 console.log(process.env.BOT_TOKEN)
@@ -89,8 +90,8 @@ const commands = [
         ]
     },
     {
-        name: 'whosebasestatsarehigher',
-        description: 'See which pokemon has the higher base stats!',
+        name: 'whosebasestatstotalishigher',
+        description: 'See which pokemon has the higher total base stats!',
         options: [
             {
                 name: 'first-pokemon',
@@ -100,7 +101,7 @@ const commands = [
             },
             {
                 name: 'second-pokemon',
-                description: "The second pokemon to compare weight with",
+                description: "The second pokemon to compare base stats with",
                 type: ApplicationCommandOptionType.String,
                 required: true
             }
