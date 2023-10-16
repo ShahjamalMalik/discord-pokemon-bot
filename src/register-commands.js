@@ -8,13 +8,13 @@ const commands = [
         options: [
             {
                 name: 'first-pokemon',
-                description: "The first pokemon to compare weight to",
+                description: "The first pokemon to compare weight with",
                 type: ApplicationCommandOptionType.String,
                 required: true
             },
             {
                 name: 'second-pokemon',
-                description: "The second pokemon to compare weight to",
+                description: "The second pokemon to compare weight with",
                 type: ApplicationCommandOptionType.String,
                 required: true
             }
@@ -46,7 +46,7 @@ const commands = [
     },
     {
         name: 'checkifpokemonisinregion',
-        description: 'Give a Pokemon name and check to see if it is in the specified region you pick (example, is charizard in johto region)',
+        description: 'Give a Pokemon name and check to see if it is in the specified region you pick',
         options: [
             {
                 name: 'pokemon-name',
@@ -56,18 +56,52 @@ const commands = [
             },
             {
                 name: 'region',
-                description: "the name of the pokemon we want to see what region it is a part of",
-                type: ApplicationCommandOptionType.String,
+                description: "the region name we want to see if the pokemon is in",
+                type: ApplicationCommandOptionType.Number,
                 choices: [
                     {
                         name: 'Kanto',
-                        value: 'Kanto'
+                        value: 2
                     },
                     {
                         name: 'Johto',
-                        value: 'Johto'
+                        value: 7
+                    },
+                    {
+                        name: 'Hoenn',
+                        value: 15
+                    },
+                    {
+                        name: 'Sinnoh',
+                        value: 6
+                    },
+                    {
+                        name: 'Unova',
+                        value: 9
+                    },
+                    {
+                        name: 'Alola',
+                        value: 21
                     }
                 ],
+                required: true
+            }
+        ]
+    },
+    {
+        name: 'whosebasestatsarehigher',
+        description: 'See which pokemon has the higher base stats!',
+        options: [
+            {
+                name: 'first-pokemon',
+                description: "The first pokemon to compare base stats with",
+                type: ApplicationCommandOptionType.String,
+                required: true
+            },
+            {
+                name: 'second-pokemon',
+                description: "The second pokemon to compare weight with",
+                type: ApplicationCommandOptionType.String,
                 required: true
             }
         ]

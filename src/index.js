@@ -1,6 +1,5 @@
 const axios = require('axios');
 require('dotenv').config();
-console.log(process.env.BOT_TOKEN);
 const {Client, IntentsBitField, ClientApplication} = require('discord.js');
 let username;
 let msg;
@@ -43,7 +42,6 @@ client.on('interactionCreate', (interaction) => {
 
         const firstPokemon = interaction.options.get('first-pokemon').value;
         const secondPokemon = interaction.options.get('second-pokemon').value;
-        console.log(`First Pokemon: ${firstPokemon}, secondPokemon: ${secondPokemon}`)
         let endpoints = [`https://pokeapi.co/api/v2/pokemon/${firstPokemon.toLowerCase()}`, `https://pokeapi.co/api/v2/pokemon/${secondPokemon.toLowerCase()}`]
         axios.all(endpoints.map((endpoint) => axios.get(endpoint)))
         .then(response => {
@@ -65,7 +63,6 @@ client.on('interactionCreate', (interaction) => {
         const generationNumber = interaction.options.get('generation-number').value;
         axios.get(`https://pokeapi.co/api/v2/generation/${generationNumber}`)
             .then(response => {
-                console.log(response.data.main_region.name)
                 interaction.reply(`The main region in Generation ${generationNumber} is: ${response.data.main_region.name}`)
             })
             .catch(error => {
@@ -77,14 +74,12 @@ client.on('interactionCreate', (interaction) => {
     if(interaction.commandName === 'getthepokemontyping') {
         const pokemonName = interaction.options.get('pokemon-name').value;
         let counter = 1;
-        axios.get(`https://pokeapi.co/api/v2/pokemon//${pokemonName.toLowerCase()}`)
+        axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`)
         .then(response => {
-            console.log(response.data.types.length)
             let typeString = "";
             for (pokemonType in response.data.types) {
 
                 if(counter < response.data.types.length) {
-                    console.log(response.data.types[pokemonType].type.name)
                     typeString = typeString + response.data.types[pokemonType].type.name + " and "
                 } else {
                     typeString = typeString + response.data.types[pokemonType].type.name
@@ -94,11 +89,35 @@ client.on('interactionCreate', (interaction) => {
 
 
             interaction.reply(`The typing(s) for ${pokemonName} are ${typeString}`)
-            console.log(typeString)
             
         })
         .catch(error => {
-            interaction.reply(`The List Main Region for Generation command didn't work, this is probably due to entering in a generation number that does not exist.`)
+            interaction.reply(`The Get the Pokemon Typing command didn't work, this is probably due to entering in a Pokemon that does not exist.`)
+            console.log(error)
+        })
+    }
+    if(interaction.commandName === 'checkifpokemonisinregion') {
+        const pokemonName = interaction.options.get('pokemon-name').value;
+        const region = interaction.options.get('region').value;
+        let isMatch = false;
+        let regionName;
+        axios.get(`https://pokeapi.co/api/v2/pokedex/${region}`)
+        .then(response => {
+            regionName = response.data.name;
+            for(object of response.data.pokemon_entries) {
+                if(object.pokemon_species.name === pokemonName.toLowerCase()) {
+                    isMatch = true;
+                    break;
+                }
+            }
+            if(isMatch) {
+                interaction.reply(`${pokemonName} is found in ${regionName}`)
+            } else {
+                interaction.reply(`${pokemonName} is not found in ${regionName}`)
+            }          
+        })
+        .catch(error => {
+            interaction.reply(`The Check if Pokemon is in Region didn't work.`)
             console.log(error)
         })
     }
